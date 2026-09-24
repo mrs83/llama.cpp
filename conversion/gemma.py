@@ -700,7 +700,7 @@ class Gemma4Model(Gemma3Model):
         self.gguf_writer.add_key_length_swa(head_dim_swa)
         self.gguf_writer.add_value_length_swa(head_dim_swa)
 
-        expert_intermediate_size = self.find_hparam(["expert_intermediate_size", "moe_intermediate_size"])
+        expert_intermediate_size = self.find_hparam(["expert_intermediate_size", "moe_intermediate_size"], optional=True)
         if expert_intermediate_size is not None:
             self.gguf_writer.add_expert_feed_forward_length(expert_intermediate_size)
 
@@ -909,7 +909,7 @@ class Gemma4DSparkModel(DFlashModel):
             yield self.format_tensor_name(gguf.MODEL_TENSOR.ROPE_FREQS), factors
 
 
-@ModelBase.register("Gemma4UnifiedForConditionalGeneration")
+@ModelBase.register("Gemma4UnifiedForConditionalGeneration", "Gemma4UnifiedForCausalLM")
 @ModelBase.example("hf-tiny-v2/tiny-random-Gemma4UnifiedForConditionalGeneration")
 class Gemma4UnifiedModel(Gemma4Model):
     model_arch = gguf.MODEL_ARCH.GEMMA4
